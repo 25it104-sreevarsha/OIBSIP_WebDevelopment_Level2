@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Authentication Demo</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: linear-gradient(135deg, #89f7fe, #66a6ff);
+    }
+
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      width: 350px;
+      text-align: center;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 14px;
+      color: red;
+    }
+
+    a {
+      display: block;
+      margin-top: 10px;
+      color: #007bff;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container" id="authContainer">
+    <h2>Login / Register</h2>
+
+    <input type="text" id="username" placeholder="Username" />
+    <input type="password" id="password" placeholder="Password" />
+
+    <button onclick="login()">Login</button>
+    <button onclick="register()">Register</button>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <div class="container" id="securePage" style="display:none;">
+    <h2>Welcome!</h2>
+    <p>You have successfully logged in.</p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <script>
+    // Store users in localStorage (demo purpose only)
+    function register() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const message = document.getElementById('message');
+
+      if (!username || !password) {
+        message.innerText = "Please enter both username and password.";
+        return;
+      }
+
+      let users = JSON.parse(localStorage.getItem('users')) || {};
+
+      if (users[username]) {
+        message.innerText = "Username already exists. Please choose another.";
+        return;
+      }
+
+      users[username] = password;
+      localStorage.setItem('users', JSON.stringify(users));
+      message.style.color = 'green';
+      message.innerText = "Registration successful! You can login now.";
+    }
+
+    function login() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const message = document.getElementById('message');
+
+      let users = JSON.parse(localStorage.getItem('users')) || {};
+
+      if (users[username] && users[username] === password) {
+        document.getElementById('authContainer').style.display = 'none';
+        document.getElementById('securePage').style.display = 'block';
+        message.innerText = '';
+      } else {
+        message.style.color = 'red';
+        message.innerText = "Invalid username or password!";
+      }
+    }
+
+    function logout() {
+      document.getElementById('securePage').style.display = 'none';
+      document.getElementById('authContainer').style.display = 'block';
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('message').innerText = '';
+    }
+  </script>
+</body>
+</html>
